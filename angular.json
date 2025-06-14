@@ -22,7 +22,8 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "node_modules/flexi-toast/src/flexi-toast.css"
             ]
           },
           "configurations": {
@@ -77,6 +78,32 @@
             "styles": [
               "src/styles.css"
             ]
+          }
+        }
+      }
+    },
+    "library": {
+      "projectType": "library",
+      "root": "library",
+      "sourceRoot": "library/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "library/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "library/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:karma",
+          "options": {
+            "tsConfig": "library/tsconfig.spec.json"
           }
         }
       }
