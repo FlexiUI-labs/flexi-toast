@@ -22,8 +22,7 @@
               }
             ],
             "styles": [
-              "src/styles.css",
-              "node_modules/flexi-toast/src/flexi-toast.css"
+              "src/styles.css"
             ]
           },
           "configurations": {

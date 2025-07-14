@@ -1,25 +1,26 @@
+/* CSS değişkenlerini daha güçlü hale getirelim */
 [data-bs-theme="light"] {
-    --flexi-toast-background-color: #fff;
-    --flexi-toast-btn-border-color: #ccc;
-    --flexi-toast-cancel-btn-background-color: #212529;
-    --flexi-toast-text-color: #101020;
-    --flexi-toast-success: #47D764;
-    --flexi-toast-warning: #FFC021;
-    --flexi-toast-error: #ff355b;
-    --flexi-toast-info: #2F86EB;
-    --flexi-toast-default: #fff;
+    --flexi-toast-background-color: #ffffff !important;
+    --flexi-toast-btn-border-color: #dee2e6 !important;
+    --flexi-toast-cancel-btn-background-color: #6c757d !important;
+    --flexi-toast-text-color: #212529 !important;
+    --flexi-toast-success: #47D764 !important;
+    --flexi-toast-warning: #FFC021 !important;
+    --flexi-toast-error: #ff355b !important;
+    --flexi-toast-info: #2F86EB !important;
+    --flexi-toast-default: #ffffff !important;
 }
 
 [data-bs-theme="dark"] {
-    --flexi-toast-background-color: #212529;
-    --flexi-toast-btn-border-color: #ccc;
-    --flexi-toast-cancel-btn-background-color: #212529;
-    --flexi-toast-text-color: #fff;
-    --flexi-toast-success: #47D764;
-    --flexi-toast-warning: #FFC021;
-    --flexi-toast-error: #ff355b;
-    --flexi-toast-info: #2F86EB;
-    --flexi-toast-default: #212529;
+    --flexi-toast-background-color: #343a40 !important;
+    --flexi-toast-btn-border-color: #495057 !important;
+    --flexi-toast-cancel-btn-background-color: #6c757d !important;
+    --flexi-toast-text-color: #ffffff !important;
+    --flexi-toast-success: #47D764 !important;
+    --flexi-toast-warning: #FFC021 !important;
+    --flexi-toast-error: #ff355b !important;
+    --flexi-toast-info: #2F86EB !important;
+    --flexi-toast-default: #343a40 !important;
 }
 
 .flexi-toast-wrapper {
@@ -204,8 +205,12 @@
 }
 
 .flexi-swal-content{
-    background-color: white;
+    background-color: var(--flexi-toast-background-color);
+    color: var(--flexi-toast-text-color);
     min-width: 300px;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.3s ease-in-out;
 }
 
 .flexi-swal-title-container, .flexi-swal-question-container, .flexi-swal-button-container{
@@ -213,31 +218,39 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #dfdddd;
+    border-bottom: 1px solid var(--flexi-toast-btn-border-color);
 }
 
 .flexi-swal-title-container{
     padding: 10px 15px;
     font-size: 1rem;
-    background-color: #fafafa;
+    background-color: var(--flexi-toast-background-color);
+    color: var(--flexi-toast-text-color);
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
 }
 
 .flexi-swal-question-container{
     padding: 15px 15px;
     font-size: 0.9rem;
+    color: var(--flexi-toast-text-color);
+    background-color: var(--flexi-toast-background-color);
 }
 
 .flexi-swal-button-container{
     gap: 5px;
-    background-color: #fafafa;
+    background-color: var(--flexi-toast-background-color);
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-bottom: none;
 }
 
 .flexi-swal-button {
     width: 100%;
-    padding: 5px 16px;
-    border: 1px solid #dcdcdc;
-    background-color: #fff;
-    color: #333;
+    padding: 8px 16px;
+    border: 1px solid var(--flexi-toast-btn-border-color);
+    background-color: var(--flexi-toast-background-color);
+    color: var(--flexi-toast-text-color);
     border-radius: 4px;
     font-size: 14px;
     cursor: pointer;
@@ -245,7 +258,8 @@
 }
 
 .flexi-swal-button:hover {
-    background-color: #f1f1f1;
+    opacity: 0.8;
+    transform: translateY(-1px);
 }
 
 .flexi-swal-button-primary {
@@ -262,8 +276,69 @@
     border: 0px;
     background-color: transparent;
     padding: 1px 10px;
+    color: var(--flexi-toast-text-color);
+    border-radius: 4px;
+    transition: background-color 0.2s ease-in-out;
 }
 
 .flexi-swal-close-button:hover{
-    background-color: #f1f1f1;
+    background-color: var(--flexi-toast-btn-border-color);
+}
+
+.flexi-swal-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background-color: transparent;
+    border: none;
+    font-size: 20px;
+    color: var(--flexi-toast-text-color);
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.flexi-swal-close-btn:hover {
+    background-color: var(--flexi-toast-btn-border-color);
+}
+
+/* Dark theme için özel renkler */
+[data-bs-theme="dark"] .flexi-swal-container {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+[data-bs-theme="dark"] .flexi-swal-content {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.fade-out {
+    animation: fadeOut 0.2s ease-in-out forwards;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.9);
+    }
 }

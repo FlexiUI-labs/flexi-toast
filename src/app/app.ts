@@ -1,6 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { FlexiToastOptionsModel, FlexiToastService } from 'flexi-toast';
+import { FlexiToastOptionsModel, FlexiToastService } from '../../library/src/lib/flexi-toast.service';
 
 @Component({
   selector: 'app-root',
@@ -12,21 +11,39 @@ import { FlexiToastOptionsModel, FlexiToastService } from 'flexi-toast';
     <button style="background-color:#FFC021; color: black; padding:10px" (click)="warning()">Warning</button>
     <button style="background-color:#ff355b; color: white; padding:10px" (click)="error()">Error</button>
     <button style="padding:10px" (click)="swal()">Swal</button>
+    
+    <!-- Theme Toggle Button -->
+    <button style="padding:10px; background-color: #6c757d; color: white;" (click)="toggleTheme()">
+      Toggle Theme ({{ currentTheme() }})
+    </button>
   </div>
   `
 })
 export class App {
   readonly options = signal<FlexiToastOptionsModel>(new FlexiToastOptionsModel());
+  readonly currentTheme = signal<'light' | 'dark'>('dark');
 
   readonly #toast = inject(FlexiToastService);
 
   constructor(){
+    this.updateOptions();
+  }
+
+  private updateOptions() {
     this.options.update(prev => ({
       ...prev,
       autoClose: true,
       position: 'bottom-right',
-      themeClass: 'light'
-    }))
+      themeClass: this.currentTheme(),
+      swalContentThemeClass: 'default'
+    }));
+
+    this.#toast.options = this.options();
+  }
+
+  toggleTheme() {
+    this.currentTheme.update(theme => theme === 'light' ? 'dark' : 'light');
+    this.updateOptions();
   }
 
   success(){
@@ -48,6 +65,8 @@ export class App {
   swal(){
     this.#toast.showSwal("Question?","This is a question?","Yes",() => {
       this.#toast.showToast("Info","This is a info message", "info");
-    },"No")
+    },"No", () => {
+      console.log("Cancelled");
+    });
   }
 }

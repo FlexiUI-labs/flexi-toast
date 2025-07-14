@@ -1,4 +1,5 @@
-import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
+import { Injectable, Renderer2, RendererFactory2, ComponentRef, ViewContainerRef, ApplicationRef, createComponent, EnvironmentInjector, inject } from '@angular/core';
+import { FlexiSwalComponent } from './flexi-swal.component';
 
 @Injectable({
   providedIn: 'root'
@@ -7,6 +8,8 @@ export class FlexiToastService {
   options: FlexiToastOptionsModel = new FlexiToastOptionsModel();
 
   private renderer: Renderer2;
+  private appRef = inject(ApplicationRef);
+  private injector = inject(EnvironmentInjector);
 
   constructor(rendererFactory: RendererFactory2) {
     this.renderer = rendererFactory.createRenderer(null, null);
@@ -128,7 +131,6 @@ export class FlexiToastService {
       this.renderer.appendChild(toast, closeBtn);
     }
 
-
     this.renderer.appendChild(wrapper, toast);
 
     // Timeout to trigger the fade-in animation
@@ -147,122 +149,54 @@ export class FlexiToastService {
     }
   }
 
-  showSwal(title: string, question: string, confirmBtnText: string = this.options.confirmBtnText ?? "Delete", callBack: () => void, cancelBtnText: string = this.options.cancelBtnText ?? "Cancel", cancelCallBack?:()=> void) {
-    const body = this.renderer.selectRootElement('body', true);
+  showSwal(title: string, question: string, confirmBtnText: string = this.options.confirmBtnText ?? "Delete", callBack: () => void, cancelBtnText: string = this.options.cancelBtnText ?? "Cancel", cancelCallBack?: () => void): ComponentRef<FlexiSwalComponent> {
 
-    const container = this.renderer.createElement('div');
-    this.renderer.addClass(container, 'flexi-swal-container');
-    this.renderer.setAttribute(container, `data-bs-theme`, this.options.themeClass!)
+    // Create component
+    const componentRef = createComponent(FlexiSwalComponent, {
+      environmentInjector: this.injector
+    });
 
-    const content = this.renderer.createElement('div');
-    this.renderer.addClass(content, 'flexi-swal-content');
-    this.renderer.addClass(content, `flexi-swal-content-left-border-${this.options.swalContentThemeClass}`);
+    // Set inputs
+    componentRef.setInput('title', title);
+    componentRef.setInput('question', question);
+    componentRef.setInput('confirmBtnText', confirmBtnText);
+    componentRef.setInput('cancelBtnText', cancelBtnText);
+    componentRef.setInput('showCloseBtn', this.options.showSwalCloseBtn);
+    componentRef.setInput('themeClass', this.options.themeClass);
+    componentRef.setInput('contentThemeClass', this.options.swalContentThemeClass);
+    componentRef.setInput('isVisible', true);
 
-    if(this.options.showSwalCloseBtn){
-      const closeBtn = this.renderer.createElement('span');
-        this.renderer.addClass(closeBtn, 'flexi-swal-close-btn');
-        const closeText = this.renderer.createText('×');
-        this.renderer.appendChild(closeBtn, closeText);
-
-        this.renderer.listen(closeBtn, 'click', () => {
-          this.renderer.addClass(content, 'fade-out');
-          setTimeout(() => {
-            this.renderer.removeChild(body, container);
-          }, 200);
-        });
-
-        this.renderer.appendChild(content, closeBtn);
-    }
-
-    const titleEl = this.renderer.createElement("div");
-    this.renderer.addClass(titleEl,"flexi-swal-title-container");
-    const titleTextEl = this.renderer.createElement("span");
-    const titleText = this.renderer.createText(title);
-    this.renderer.appendChild(titleTextEl, titleText);
-    const titleCloseButton = this.renderer.createElement("button");
-    const titleCloseButtonText = this.renderer.createText("x");
-    this.renderer.appendChild(titleCloseButton,titleCloseButtonText);
-    this.renderer.addClass(titleCloseButton, 'flexi-swal-close-button');
-    this.renderer.appendChild(titleEl, titleText);
-    this.renderer.appendChild(titleEl, titleCloseButton);
-    this.renderer.appendChild(content, titleEl);
-
-    const questionEl = this.renderer.createElement('div');
-    this.renderer.addClass(questionEl,"flexi-swal-question-container");
-    const questionTextEl = this.renderer.createElement("span");
-    const questionText = this.renderer.createText(question);
-    this.renderer.appendChild(questionTextEl, questionText);
-    this.renderer.appendChild(questionEl,questionTextEl);
-    this.renderer.appendChild(content, questionEl);
-
-    const buttonsContainer = this.renderer.createElement('div');
-    this.renderer.addClass(buttonsContainer, "flexi-swal-button-container");
-
-    const confirmButton = this.renderer.createElement('button');
-    this.renderer.addClass(confirmButton, 'flexi-swal-button');
-    this.renderer.addClass(confirmButton, "flexi-swal-button-primary");
-    const confirmButtonText = this.renderer.createText(confirmBtnText);
-    this.renderer.appendChild(confirmButton, confirmButtonText);
-
-    const cancelButton = this.renderer.createElement('button');
-    this.renderer.addClass(cancelButton, 'flexi-swal-button');
-
-    const cancelButtonText = this.renderer.createText(cancelBtnText);
-    this.renderer.appendChild(cancelButton, cancelButtonText);
-
-    this.renderer.listen(confirmButton, 'click', () => {
+    // Subscribe to outputs
+    componentRef.instance.confirmed.subscribe(() => {
       callBack();
-      this.renderer.addClass(content, 'fade-out');
-      setTimeout(() => {
-        this.renderer.removeChild(body, container);
-        this.renderer.removeStyle(body, 'overflow')
-        const el = document.getElementsByClassName("flexi-swal-container");
-        if(el.length > 0){
-          el[0].remove();
-        }
-      }, 200);
+      this.destroySwal(componentRef);
     });
 
-    this.renderer.listen(cancelButton, 'click', () => {
-      this.renderer.addClass(content, 'fade-out');
-      if(cancelCallBack){
+    componentRef.instance.cancelled.subscribe(() => {
+      if (cancelCallBack) {
         cancelCallBack();
       }
-      setTimeout(() => {
-        this.renderer.removeChild(body, container);
-        this.renderer.removeStyle(body, 'overflow');
-        const el = document.getElementsByClassName("flexi-swal-container");
-        if(el.length > 0){
-          el[0].remove();
-        }
-      }, 200);
+      this.destroySwal(componentRef);
     });
 
-    this.renderer.listen(titleCloseButton, 'click', () => {
-      this.renderer.addClass(content, 'fade-out');
-      if(cancelCallBack){
-        cancelCallBack();
-      }
-      setTimeout(() => {
-        this.renderer.removeChild(body, container);
-        this.renderer.removeStyle(body, 'overflow');
-        const el = document.getElementsByClassName("flexi-swal-container");
-        if(el.length > 0){
-          el[0].remove();
-        }
-      }, 200);
+    componentRef.instance.closed.subscribe(() => {
+      this.destroySwal(componentRef);
     });
 
+    // Append to body
+    document.body.appendChild(componentRef.location.nativeElement);
 
-    this.renderer.appendChild(buttonsContainer, confirmButton);
-    this.renderer.appendChild(buttonsContainer, cancelButton);
+    // Attach to Angular's change detection
+    this.appRef.attachView(componentRef.hostView);
 
-    this.renderer.appendChild(content, buttonsContainer);
+    return componentRef;
+  }
 
-    this.renderer.appendChild(container, content);
-
-    this.renderer.appendChild(body, container);
-    this.renderer.setStyle(body, 'overflow', 'hidden');
+  private destroySwal(componentRef: ComponentRef<FlexiSwalComponent>) {
+    setTimeout(() => {
+      this.appRef.detachView(componentRef.hostView);
+      componentRef.destroy();
+    }, 200);
   }
 }
 

@@ -1,6 +1,6 @@
 {
   "name": "flexi-toast",
-  "version": "20.0.2",
+  "version": "20.0.3",
   "description": "Lightweight, customizable Angular toast notification component with title, message, icon types, auto-dismiss, manual close, animations, theme and positioning support.",
   "author": "Taner Saydam <tanersaydam@gmail.com>",
   "license": "MIT",
