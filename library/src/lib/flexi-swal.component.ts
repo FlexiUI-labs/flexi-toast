@@ -27,7 +27,7 @@ export type FlexiSwalContentThemeClass = "success" | "warning" | "info" | "error
 
             <!-- Question container -->
             <div class="flexi-swal-question-container">
-              <span>{{ question() }}</span>
+              <span [innerHtml]="question()"></span>
             </div>
 
             <!-- Button container -->

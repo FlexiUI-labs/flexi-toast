@@ -63,7 +63,7 @@ export class App {
   }
 
   swal(){
-    this.#toast.showSwal("Question?","This is a question?","Yes",() => {
+    this.#toast.showSwal("Question?","This is a question?<br>Test2<br>test3","Yes",() => {
       this.#toast.showToast("Info","This is a info message", "info");
     },"No", () => {
       console.log("Cancelled");
