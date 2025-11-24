@@ -1,51 +1,52 @@
 import { Component, Input, Output, EventEmitter, HostBinding, ViewEncapsulation, ChangeDetectionStrategy, input, linkedSignal, output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 export type FlexiSwalContentThemeClass = "success" | "warning" | "info" | "error" | "default";
 
 @Component({
     selector: 'flexi-swal',
-    imports: [CommonModule],
+    imports: [],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
     @if(isVisibleSignal()){
-        <div class="flexi-swal-container" [attr.data-bs-theme]="themeClass()">
-          <div class="flexi-swal-content"
-               [attr.data-bs-theme]="themeClass()">
-
-            <!-- Close button (top right) -->
+      <div class="flexi-swal-container" [attr.data-bs-theme]="themeClass()">
+        <div class="flexi-swal-content"
+          [attr.data-bs-theme]="themeClass()">
+    
+          <!-- Close button (top right) -->
+          @if (showCloseBtn()) {
             <span class="flexi-swal-close-btn"
-                  *ngIf="showCloseBtn()"
-                  (click)="onCancel()">×</span>
-
-            <!-- Title container -->
-            <div class="flexi-swal-title-container">
-              <span>{{ title() }}</span>
-              <button class="flexi-swal-close-button" (click)="onCancel()">×</button>
-            </div>
-
-            <!-- Question container -->
-            <div class="flexi-swal-question-container">
-              <span [innerHtml]="question()"></span>
-            </div>
-
-            <!-- Button container -->
-            <div class="flexi-swal-button-container">
-              <button class="flexi-swal-button flexi-swal-button-primary"
-                      (click)="onConfirm()">
-                {{ confirmBtnText() }}
-              </button>
-              <button class="flexi-swal-button"
-                      (click)="onCancel()">
-                {{ cancelBtnText() }}
-              </button>
-            </div>
-
+            (click)="onCancel()">×</span>
+          }
+    
+          <!-- Title container -->
+          <div class="flexi-swal-title-container">
+            <span>{{ title() }}</span>
+            <button class="flexi-swal-close-button" (click)="onCancel()">×</button>
           </div>
+    
+          <!-- Question container -->
+          <div class="flexi-swal-question-container">
+            <span [innerHtml]="question()"></span>
+          </div>
+    
+          <!-- Button container -->
+          <div class="flexi-swal-button-container">
+            <button class="flexi-swal-button flexi-swal-button-primary"
+              (click)="onConfirm()">
+              {{ confirmBtnText() }}
+            </button>
+            <button class="flexi-swal-button"
+              (click)="onCancel()">
+              {{ cancelBtnText() }}
+            </button>
+          </div>
+    
         </div>
+      </div>
     }
-  `,
+    `,
     styles: [`
     :host {
       position: fixed;
