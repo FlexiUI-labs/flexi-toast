@@ -11,7 +11,7 @@ import { FlexiToastOptionsModel, FlexiToastService } from '../../library/src/lib
     <button style="background-color:#FFC021; color: black; padding:10px" (click)="warning()">Warning</button>
     <button style="background-color:#ff355b; color: white; padding:10px" (click)="error()">Error</button>
     <button style="padding:10px" (click)="swal()">Swal</button>
-    
+
     <!-- Theme Toggle Button -->
     <button style="padding:10px; background-color: #6c757d; color: white;" (click)="toggleTheme()">
       Toggle Theme ({{ currentTheme() }})
