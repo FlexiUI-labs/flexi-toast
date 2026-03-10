@@ -189,6 +189,8 @@ export class FlexiToastService {
     // Attach to Angular's change detection
     this.appRef.attachView(componentRef.hostView);
 
+    componentRef.changeDetectorRef.detectChanges();
+
     return componentRef;
   }
 
