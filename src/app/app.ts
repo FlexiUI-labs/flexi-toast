@@ -1,9 +1,10 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FlexiToastOptionsModel, FlexiToastService } from '../../library/src/lib/flexi-toast.service';
 
 @Component({
   selector: 'app-root',
   imports: [],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template:`
   <div style="margin: 30px; display:flex; flex-direction: column; gap: 5px; width:200px">
     <button style="background-color:#47D764; color: white; padding:10px" (click)="success()">Success</button>
